@@ -1,34 +1,39 @@
 import construccion_arbol
 import clasificacion
-
+import muestreo
+import cargadoraCSV
+import graficadora
 
 def main():
-    datosEntrenamiento = construccion_arbol.cargarCSV('weather.csv')  
-    arbolDecision = construccion_arbol.crearArbolDecisionDesde(datosEntrenamiento)
-    construccion_arbol.graficar(arbolDecision)
-    print(clasificacion.clasificar(['Sunny', 'Cool', 'High', 'Strong'], arbolDecision)) #  SALIDA: {'Yes': 1}
+    datos_entrenamiento = cargadoraCSV.cargarCSV('weather.csv')  
+    
+    # Realizar selección aleatoria de características
+    atributos = ['Outlook', 'Temperature', 'Humidity', 'Wind']
+    cantidad_seleccion = round(len(atributos) / 2)  # Aproximadamente la mitad de los atributos
+    atributos_seleccionados = muestreo.seleccion_aleatoria_caracteristicas(atributos, cantidad_seleccion)
+   
+    numero_arboles = 20 #PROBEMOS CON 4 ARBOLES
+    instancia = ['Sunny', 'Cool', 'High', 'Strong'] # EJEMPLO DE INSTANCIA A CLASIFICAR
+    
+    print("Atributos seleccionados aleatoriamente:", atributos_seleccionados)
 
-    datos_entrenamiento = construccion_arbol.cargarCSV('weather.csv')
+    # Crear una lista para almacenar las predicciones de cada árbol
+    predicciones_arboles = []
 
-    ig_outlook = construccion_arbol.ganancia_informacion(0, datos_entrenamiento)
-    ig_temperatura = construccion_arbol.ganancia_informacion(1, datos_entrenamiento)
-    ig_humedad = construccion_arbol.ganancia_informacion(2, datos_entrenamiento)
-    ig_wind = construccion_arbol.ganancia_informacion(3, datos_entrenamiento)
+    # Aplicar bootstrapping y construir árboles de decisión
+    for _ in range(numero_arboles):
+        tamano_muestra = len(datos_entrenamiento)
+        muestra_bootstrap = muestreo.bootstrapping(datos_entrenamiento, tamano_muestra)
+        arbol_decision = construccion_arbol.crearArbolDecisionDesde(muestra_bootstrap)
 
-    print(f'IG(Outlook): {ig_outlook}')
-    print(f'IG(Temperatura): {ig_temperatura}')
-    print(f'IG(Humedad): {ig_humedad}')
-    print(f'IG(Wind): {ig_wind}')
+        print(f"Árbol de decisión {_ + 1}:")
+        graficadora.graficar(arbol_decision) # Graficar el árbol de decisión para esta iteracion i de 10
+
+        predicciones_arboles.append(clasificacion.clasificar(instancia, arbol_decision)) # Clasificar la instancia con el arbol de decision actual y agregar la predicción a la lista de predicciones_arboles
+
+    # Combinar las predicciones de todos los árboles
+    prediccion_final = muestreo.combinar_predicciones(predicciones_arboles)
+    print("Predicción final:", prediccion_final) # UNA DE LAS POSIBLES SALIDAS FUE: {'Yes': 10} donde 'Yes' es la clase con mayor votación y 10 es el número de votos para esa clase que significa que la clase Yes fue seleccionada por todos los árboles en el bosque de decisión un total de 10 veces.
 
 if __name__ == '__main__':
-
-	# Todos los ejemplos hacen los siguientes pasos:
-	# 	1. Cargar datos de entrenamiento
-	# 	2. Dejar que el árbol de decisión crezca
-	# 	4. Graficar el árbol de decisión
-	# 	5. Clasificar sin datos faltantes
-	# 	6. Clasificar con datos faltantes
-	#  FALTA	(7.) Podar el árbol de decisión según un nivel mínimo de ganancia 
-	#  FALTA	(8.) Graficar el árbol podado
-
     main()

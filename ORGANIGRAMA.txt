@@ -1,0 +1,41 @@
+
+PROYECTO EN PROCESO: LIBRERÍA DE MODELOS PREDICTIVOS ♡
+
+Este proyecto tiene como objetivo crear una librería de modelos predictivos (tipo RandomForest simplificado) 
+implementados en Python. La estructura de directorios va a estar organizada de la siguiente 
+manera (pueden ir surgiendo cambios):
+
+Proyecto: Librería de Modelos Predictivos
+main.py
+├── Librería
+│   ├── Árbol de Decisión
+│   │   ├── arbol_decision.py
+│   │   │   ├── Clase NodoAB
+│   │   │   └── Clase ArbolBinario
+│   │   ├── construccion_arbol.py
+│   │   └── clasificacion.py
+│   │   
+│   ├── Conjuntos de Datos
+│   │   ├── conjuntos.py
+│   │   └── manejo_datos.py
+│   │   
+│   ├── Cálculo de Entropía y Ganancia de Información
+│   │   └── entropia_ganancia.py
+│   │   
+│   ├── Muestras Aleatorias
+│   │   └── muestreo.py 
+│   │   
+│   ├── Funciones de Visualización
+│   │   └── visualizacion.py
+│   │   
+│   ├── Random Forest
+│   │   ├── random_forest.py
+│   │   └── combinacion_predicciones.py
+│   │   
+│   └── Hiperparámetros 
+│       └── hiperparametros.py
+│       
+└── Interfaz ????
+    └── interfaz.py
+
+

@@ -1,8 +1,11 @@
 """
+C4.5 es un algoritmo de aprendizaje automático que genera árboles de decisión. Este algoritmo es una extensión de 
+ID3 y fue desarrollado por Ross Quinlan. C4.5 es capaz de manejar datos faltantes y puede ser utilizado para 
+problemas de clasificación y regresión. Este bloque de código implementa el algoritmo C4.5 para la construcción de un RandomForest.
+
 Este módulo contiene funciones y clases relacionadas con la construcción y poda de árboles de decisión.
 """
 
-import csv 
 import collections 
 from clasificacion import clasificar
 
@@ -43,7 +46,7 @@ def conteosUnicos(filas):
 
 def entropia(filas):
     """
-    Calcula la entropía de un conjunto de datos.
+    Calcula la entropía de un conjunto de datos usando la definición de Shannon.
 
     Args:
         filas (list): Lista de filas.
@@ -112,6 +115,11 @@ def crearArbolDecisionDesde(filas, funcionEvaluacion = entropia):
     Returns:
         ArbolDecision: Árbol de decisión creado.
     """
+
+    filas = imputacionValoresFaltantes(filas) # Manejamos valores faltantes antes de construir el arbol de desicion
+  #  filas = manejoAtributosContinuos(filas) 
+    ordenarValoresUnicos(filas)  # Ordenamos valores unicos (para atributos continuos #C4.5)
+
     if len(filas) == 0: return ArbolDecision()
     puntuacionActual = funcionEvaluacion(filas)
 
@@ -119,7 +127,7 @@ def crearArbolDecisionDesde(filas, funcionEvaluacion = entropia):
     mejorAtributo = None
     mejoressets = None
 
-    numColumnas = len(filas[0]) - 1  # la última columna es la columna de resultado/objetivo 
+    numColumnas = len(filas[0]) - 1  # la ultima columna es la columna de resultado/objetivo 
     
     for col in range(0, numColumnas):
         valoresColumna = [fila[col] for fila in filas]
@@ -175,35 +183,144 @@ def podarArbol(arbol, minGanancia, funcionEvaluacion=entropia, notificar=False):
 
 
 
-# #### FUNCIONES DE APOYO (DONDE SERIA ADECUADO PONERLAS? ME HACE RUIDO QUE ESTEN EN ESTE MODULO) ####
+
+###### NUEVAS FUNCIONES ######
+
             
-def graficar(arbolDecision): #FORMATO DE SALIDA
-    '''Grafica el árbol de decisión obtenido.'''
-    def aCadena(arbolDecision, indent=''):
-        if arbolDecision.resultados != None:  # nodo hoja
-            return str(arbolDecision.resultados)
-        else:
-            if isinstance(arbolDecision.valor, int) or isinstance(arbolDecision.valor, float):
-                decision = 'Columna %s: x >= %s?' % (arbolDecision.col, arbolDecision.valor)
+def ordenarValoresUnicos(filas):
+    """
+    Ordena los valores únicos de un atributo continuo en orden ascendente.
+
+    Args:
+        filas (list): Lista de filas de datos.
+
+    Returns:
+        list: Lista de valores únicos ordenados en orden ascendente.
+    """
+    valores_unicos_ordenados = []
+    for atributo in range(len(filas[0]) - 1):
+        if isinstance(filas[0][atributo], int) or isinstance(filas[0][atributo], float):
+            valores = sorted(set(fila[atributo] for fila in filas))
+            valores_unicos_ordenados.append(valores)
+    return valores_unicos_ordenados
+
+
+# Manejo de atributos continuos y valores faltantes:
+def mejorUmbral(atributo, datos_entrenamiento):
+    """
+    Encuentra el mejor umbral para un atributo continuo utilizando el criterio de ganancia de información.
+
+    Args:
+        atributo (int): Índice del atributo a evaluar.
+        datos_entrenamiento (list): Lista de filas de datos de entrenamiento.
+
+    Returns:
+        float: Mejor umbral encontrado.
+    """
+    valores = sorted(set(fila[atributo] for fila in datos_entrenamiento))
+    mejor_ganancia = 0
+    mejor_umbral = None
+    for i in range(1, len(valores)):
+        umbral = (valores[i - 1] + valores[i]) / 2
+        conjunto_izquierdo, conjunto_derecho = [], []
+        for fila in datos_entrenamiento:
+            if fila[atributo] <= umbral:
+                conjunto_izquierdo.append(fila)
             else:
-                decision = 'Columna %s: x == %s?' % (arbolDecision.col, arbolDecision.valor)
-            ramaVerdadera = indent + 'sí -> ' + aCadena(arbolDecision.ramaVerdadera, indent + '\t\t')
-            ramaFalsa = indent + 'no  -> ' + aCadena(arbolDecision.ramaFalsa, indent + '\t\t')
-            return (decision + '\n' + ramaVerdadera + '\n' + ramaFalsa)
+                conjunto_derecho.append(fila)
+        if len(conjunto_izquierdo) == 0 or len(conjunto_derecho) == 0:
+            continue
+        ganancia = ganancia_informacion(atributo, datos_entrenamiento)
+        if ganancia > mejor_ganancia:
+            mejor_ganancia = ganancia
+            mejor_umbral = umbral
+    return mejor_umbral
 
-    print(aCadena(arbolDecision))
+def manejoAtributosContinuos(filas):
+    """
+    Maneja atributos continuos dividiendo el conjunto de datos en dos conjuntos basados en umbrales.
 
-def cargarCSV(archivo):  # CUAL ES EL MEJOR LUGAR PARA PONER ESTA FUNCION?
-    '''Carga un archivo CSV y convierte todos los flotantes e enteros en tipos de datos básicos.'''
-    def convertirTipos(s):
-        s = s.strip()
-        try:
-            return float(s) if '.' in s else int(s)
-        except ValueError:
-            return s    
+    Args:
+        filas (list): Lista de filas de datos de entrenamiento.
 
-    lector = csv.reader(open(archivo, 'rt'))
-    return [[convertirTipos(item) for item in fila] for fila in lector]
+    Returns:
+        list: Lista de filas de datos de entrenamiento con atributos continuos manejados.
+    """
+    filas_nuevas = []
+    for atributo in range(len(filas[0]) - 1):
+        if isinstance(filas[0][atributo], int) or isinstance(filas[0][atributo], float):
+            umbral = mejorUmbral(atributo, filas)
+            filas_izquierda, filas_derecha = [], []
+            for fila in filas:
+                if fila[atributo] <= umbral:
+                    filas_izquierda.append(fila)
+                else:
+                    filas_derecha.append(fila)
+            filas_nuevas.extend(filas_izquierda)
+            filas_nuevas.extend(filas_derecha)
+    return filas_nuevas
+
+def imputacionValoresFaltantes(filas): # decidimos usar la media de la columna para reemplazar los valores faltantes (o sea, imputar los valores faltantes con el valor que resulta de calcular la media de la columna)
+    """
+    Imputa valores faltantes en el conjunto de datos.
+
+    Args:
+        filas (list): Lista de filas de datos de entrenamiento.
+
+    Returns:
+        list: Lista de filas de datos de entrenamiento con valores faltantes imputados.
+    """
+    columnas = len(filas[0])
+    for i in range(columnas):
+        # Encontramos la media de la columna actual
+        valores = [fila[i] for fila in filas if fila[i] is not None and fila[i].isdigit()]
+        if valores:
+            media_columna = sum(map(int, valores)) / len(valores)
+            # Y rellenamos los valores faltantes con la media de la columna
+            for j in range(len(filas)):
+                if filas[j][i] is None:
+                    filas[j][i] = media_columna
+    return filas
 
 
+# Criterio de division (Gain Ratio):
+def gainRatio(atributo, datos_entrenamiento): 
+    """
+    Calcula el Gain Ratio para un atributo.
 
+    Args:
+        atributo (int): Índice del atributo a evaluar.
+        datos_entrenamiento (list): Lista de filas de datos de entrenamiento.
+
+    Returns:
+        float: Valor del Gain Ratio.
+    """
+    ganancia = ganancia_informacion(atributo, datos_entrenamiento)
+    split_info = calcularSplitInfo(atributo, datos_entrenamiento)
+    return ganancia / split_info if split_info != 0 else 0
+
+def calcularSplitInfo(atributo, datos_entrenamiento):
+
+    """
+    Calcula el Split Information para un atributo.
+
+    Args:
+        atributo (int): Índice del atributo a evaluar.
+        datos_entrenamiento (list): Lista de filas de datos de entrenamiento.
+
+    Returns:
+        float: Valor del Split Information.
+    """    
+
+    from math import log2
+
+    valores_atributo = set(fila[atributo] for fila in datos_entrenamiento)
+    total_filas = len(datos_entrenamiento)
+    split_info = 0
+    for valor in valores_atributo:
+        p = sum(1 for fila in datos_entrenamiento if fila[atributo] == valor) / total_filas
+        split_info -= p * log2(p) if p > 0 else 0 
+    return split_info
+
+# Costos asimétricos y datos ponderados:
+# IMPLEMENTAR estas funcionalidades según lo requerido por el TPF.
