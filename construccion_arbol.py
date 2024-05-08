@@ -6,7 +6,6 @@ problemas de clasificación y regresión. Este bloque de código implementa el a
 Este módulo contiene funciones y clases relacionadas con la construcción y poda de árboles de decisión.
 """
 
-import collections 
 from clasificacion import clasificar
 
 def dividirConjunto(filas, columna, valor): 
