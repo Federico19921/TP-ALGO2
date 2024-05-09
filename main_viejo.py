@@ -1,10 +1,10 @@
-import construccion_arbol
+import Algoritmo
 import clasificacion
 import muestreo
 
 # CON BOOTSTRAP
 def main():
-    datos_entrenamiento = construccion_arbol.cargarCSV('weather.csv')  
+    datos_entrenamiento = Algoritmo.cargarCSV('weather.csv')  
 
     #   SELECCION ALEATORIA DE ATRIBUTOS
     atributos = ['Outlook', 'Temperature', 'Humidity', 'Wind']
@@ -18,19 +18,19 @@ def main():
     muestra_bootstrap = muestreo.bootstrapping(datos_entrenamiento, tamano_muestra)
     
     # Construir árbol de decisión con la muestra bootstrap
-    arbol_decision = construccion_arbol.crearArbolDecisionDesde(muestra_bootstrap)
+    arbol_decision = Algoritmo.crearArbolDecisionDesde(muestra_bootstrap)
     
     # Graficar el árbol de decisión
-    construccion_arbol.graficar(arbol_decision)
+    Algoritmo.graficar(arbol_decision)
     
     # Ejemplo de clasificación
     print(clasificacion.clasificar(['Sunny', 'Cool', 'High', 'Strong'], arbol_decision)) # SALIDA: {'Yes': 1}
     
     # Calcular la ganancia de información para cada atributo
-    ig_outlook = construccion_arbol.ganancia_informacion(0, muestra_bootstrap)
-    ig_temperatura = construccion_arbol.ganancia_informacion(1, muestra_bootstrap)
-    ig_humedad = construccion_arbol.ganancia_informacion(2, muestra_bootstrap)
-    ig_wind = construccion_arbol.ganancia_informacion(3, muestra_bootstrap)
+    ig_outlook = Algoritmo.ganancia_informacion(0, muestra_bootstrap)
+    ig_temperatura = Algoritmo.ganancia_informacion(1, muestra_bootstrap)
+    ig_humedad = Algoritmo.ganancia_informacion(2, muestra_bootstrap)
+    ig_wind = Algoritmo.ganancia_informacion(3, muestra_bootstrap)
 
     print(f'IG(Outlook): {ig_outlook}')
     print(f'IG(Temperatura): {ig_temperatura}')

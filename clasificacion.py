@@ -14,21 +14,12 @@ El módulo utiliza la biblioteca "collections" para crear un diccionario con los
 
 import collections
 
-
-def clasificar(observaciones, arbol, datosFaltantes=False):
+def clasificar(observaciones: list[list[int]], arbol, datosFaltantes=False) -> dict:
     '''
     Clasifica las observaciones según el árbol.
-
-    Parámetros:
-    - observaciones: una lista de observaciones a clasificar.
-    - arbol: el árbol de decisión utilizado para la clasificación.
-    - datosFaltantes: un valor booleano que indica si se deben manejar datos faltantes en las observaciones.
-
-    Retorna:
-    - Un diccionario con los resultados de la clasificación para cada observación.
     '''
 
-    def clasificarSinDatosFaltantes(observaciones, arbol):
+    def clasificarSinDatosFaltantes(observaciones: list[list[int]], arbol) -> dict:  
         '''Clasifica las observaciones según el árbol sin manejar datos faltantes.'''
         if arbol.resultados is not None:  # hoja
             return arbol.resultados
@@ -47,7 +38,7 @@ def clasificar(observaciones, arbol, datosFaltantes=False):
                     rama = arbol.ramaFalsa
         return clasificarSinDatosFaltantes(observaciones, rama)
 
-    def clasificarConDatosFaltantes(observaciones, arbol): # Funcionalidad C4.5 - Clasificar con datos faltantes
+    def clasificarConDatosFaltantes(observaciones: list[list[int]], arbol) -> dict: # Funcionalidad C4.5 - Clasificar con datos faltantes
         '''Clasifica las observaciones según el árbol con manejo de datos faltantes.
         
          Si el valor de la obser. es 'None', calculamos las probabilidades de las ramas VERDADERA y FALSA basadas 
