@@ -4,7 +4,7 @@
 
 import random 
 
-def bootstrapping(datos_entrenamiento, tamano_muestra): # datos_entrenamiento es una lista
+def bootstrapping(datos_entrenamiento: list[list[any]] , tamano_muestra: any) -> list[any]: # datos_entrenamiento es una lista
     muestra = [] 
     for _ in range(tamano_muestra): 
         muestra.append(random.choice(datos_entrenamiento)) # Seleccionar un elemento aleatorio de datos_entrenamiento y agregarlo a muestra
@@ -16,7 +16,7 @@ def seleccion_aleatoria_caracteristicas(atributos, cantidad_seleccion):
     return atributos_seleccionados
 
 
-def combinar_predicciones(predicciones):
+def combinar_predicciones(predicciones:any) -> dict:
     # Función para combinar las predicciones de los árboles en el bosque
     # En este caso, se implementa la votación mayoritaria para problemas de clasificación
     # Se asume que predicciones es una lista de diccionarios donde cada diccionario contiene las predicciones de un árbol

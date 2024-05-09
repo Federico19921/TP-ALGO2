@@ -3,7 +3,7 @@
 
 import csv 
 
-def cargarCSV(archivo):  
+def cargarCSV(archivo: str) -> list[list[any]]:  
     '''Carga un archivo CSV y convierte todos los flotantes y enteros en tipos de datos básicos.'''
     def convertirTipos(s):
         s = s.strip()

@@ -1,4 +1,4 @@
-import construccion_arbol
+import Algoritmo
 import clasificacion
 import muestreo
 import cargadoraCSV
@@ -24,7 +24,7 @@ def main():
     for _ in range(numero_arboles):
         tamano_muestra = len(datos_entrenamiento)
         muestra_bootstrap = muestreo.bootstrapping(datos_entrenamiento, tamano_muestra)
-        arbol_decision = construccion_arbol.crearArbolDecisionDesde(muestra_bootstrap)
+        arbol_decision = Algoritmo.crearArbolDecisionDesde(muestra_bootstrap, 3,0.05)
 
         print(f"Árbol de decisión {_ + 1}:")
         graficadora.graficar(arbol_decision) # Graficar el árbol de decisión para esta iteracion i de 10
