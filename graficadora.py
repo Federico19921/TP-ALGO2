@@ -2,6 +2,7 @@
 # NOTA: Esto va en FUNCIONES DE APOYO (REVISAR SI QUEREMOS O NO CREAR ESE MODULO)
 # Se encarga de graficar el árbol de decisión obtenido.
 
+
 def graficar(arbolDecision): #FORMATO DE SALIDA
     '''Grafica el árbol de decisión obtenido.'''
     def aCadena(arbolDecision, indent=''):

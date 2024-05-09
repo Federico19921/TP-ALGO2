@@ -11,7 +11,7 @@ def bootstrapping(datos_entrenamiento: list[list[any]] , tamano_muestra: any) ->
     return muestra # Devuelvo la muestra bootstrap
 
 
-def seleccion_aleatoria_caracteristicas(atributos, cantidad_seleccion):
+def seleccion_aleatoria_caracteristicas(atributos:any, cantidad_seleccion:any) ->list[any]:
     atributos_seleccionados = random.sample(atributos, cantidad_seleccion)
     return atributos_seleccionados
 
