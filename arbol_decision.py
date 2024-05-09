@@ -10,19 +10,22 @@ La clase ArbolBinario tiene varios métodos que permiten realizar operaciones en
 como insertar nodos, obtener la altura del árbol y recorrer los nodos en diferentes órdenes.
 '''
 
+# **** INICIO BLOQUE DE IMPORTACION DE LIBRERIAS ****
 from typing import Any, Optional, TypeVar 
 from collections.abc import Callable
 from functools import wraps
+# **** FIN BLOQUE DE IMPORTACION DE LIBRERIAS ****
 
+# **** INICIO BLOQUE DE DEFINICION DE CLASES ****
 T = TypeVar('T')
 
 class NodoAB:
     def __init__(self, dato: T, si: "Optional[ArbolBinario[T]]" = None, sd: "Optional[ArbolBinario[T]]" = None):
         self.dato = dato
-        self.si: ArbolBinario[T] = ArbolBinario() if si is None else si
-        self.sd: ArbolBinario[T] = ArbolBinario() if sd is None else sd
+        self.si: ArbolBinario[T] = ArbolBinario() if si is None else si 
+        self.sd: ArbolBinario[T] = ArbolBinario() if sd is None else sd 
  
-    def __str__(self):
+    def __str__(self): 
         return str(self.dato)
     
 class ArbolBinario:
@@ -71,7 +74,7 @@ class ArbolBinario:
         t.raiz = NodoAB(dato, si, sd)
         return t
 
-    def es_vacio(self) -> bool:
+    def es_vacio(self) -> bool: 
         """
         Verifica si el árbol está vacío.
 
@@ -104,11 +107,11 @@ class ArbolBinario:
         Returns:
             El hijo derecho del árbol.
 
-        Raises:
-            TypeError: Si el árbol está vacío.
+        Raises: 
+            AssertionError: Si el árbol está vacío.
 
         """
-        assert self.raiz is not None
+        assert self.raiz is not None # verificar que el arbol no esté vacio si no lanzar excepcion AssertionError
         return self.raiz.sd
     
     def es_hoja(self) -> bool:

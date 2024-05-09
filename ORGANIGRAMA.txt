@@ -13,7 +13,7 @@ main.py
 │   │   │   ├── Clase NodoAB
 │   │   │   └── Clase ArbolBinario
 │   │   ├── construccion_arbol.py
-│   │   └── clasificacion.py 
+│   │   └── clasificacion.py
 │   │   
 │   ├── Conjuntos de Datos
 │   │   ├── conjuntos.py

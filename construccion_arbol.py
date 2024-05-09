@@ -35,7 +35,7 @@ def conteosUnicos(filas):
     Returns:
         dict: Diccionario donde las claves son los valores únicos de la última columna y los valores son las ocurrencias de cada valor.
     """
-    resultados = {}
+    resultados = { }
     for fila in filas:
         r = fila[-1]
         if r not in resultados:
@@ -150,37 +150,8 @@ def crearArbolDecisionDesde(filas, funcionEvaluacion = entropia):
        # print(filas)
         return ArbolDecision(resultados=conteosUnicos(filas))
 
-def podarArbol(arbol, minGanancia, funcionEvaluacion=entropia, notificar=False):
-    """
-    Poda el árbol de decisión según una ganancia mínima.
-
-    Args:
-        arbol (ArbolDecision): Árbol de decisión a podar.
-        minGanancia (float): Valor mínimo de ganancia para realizar la poda.
-        funcionEvaluacion (function): Función de evaluación utilizada para calcular la ganancia de información.
-        notificar (bool): Indica si se debe imprimir un mensaje de notificación al podar una rama.
-
-    Returns:
-        None
-    """
-    # llamada recursiva para cada rama
-    if arbol.ramaVerdadera.resultados == None: podarArbol(arbol.ramaVerdadera, minGanancia, funcionEvaluacion, notificar)
-    if arbol.ramaFalsa.resultados == None: podarArbol(arbol.ramaFalsa, minGanancia, funcionEvaluacion, notificar)
-
-    if arbol.ramaVerdadera.resultados != None and arbol.ramaFalsa.resultados != None:
-        ramaVerdadera, ramaFalsa = [], []
-
-        for v, c in arbol.ramaVerdadera.resultados.items(): ramaVerdadera += [[v]] * c
-        for v, c in arbol.ramaFalsa.resultados.items(): ramaFalsa += [[v]] * c
-
-        p = float(len(ramaVerdadera)) / len(ramaVerdadera + ramaFalsa)
-        delta = funcionEvaluacion(ramaVerdadera + ramaFalsa) - p * funcionEvaluacion(ramaVerdadera) - (1 - p) * funcionEvaluacion(ramaFalsa)
-        if delta < minGanancia: 
-            if notificar: print('Se podó una rama: ganancia = %f' % delta)      
-            arbol.ramaVerdadera, arbol.ramaFalsa = None, None
-            arbol.resultados = conteosUnicos(ramaVerdadera + ramaFalsa)
-
-
+def podarArbol(arbol):
+ pass # IMPLEMENTAR la poda del árbol de acuerdo a lo requerido por el TPF. !!!!!!!!!!!!!
 
 
 ###### NUEVAS FUNCIONES ######
@@ -216,7 +187,7 @@ def mejorUmbral(atributo, datos_entrenamiento):
     Returns:
         float: Mejor umbral encontrado.
     """
-    valores = sorted(set(fila[atributo] for fila in datos_entrenamiento))
+    valores = sorted(set(fila[atributo] for fila in datos_entrenamiento)) # Ordenamos (con sorted :D) los valores únicos del atributo usando el criterio de ganancia de información para encontrar el mejor umbral (C4.5). Usamos el promedio de dos valores consecutivos como umbral.
     mejor_ganancia = 0
     mejor_umbral = None
     for i in range(1, len(valores)):

@@ -1,4 +1,3 @@
-outlook,temperature,humidity,windy,play
 sunny,hot,high,weak,no
 sunny,hot,high,strong,no
 overcast,hot,high,weak,yes
@@ -12,4 +11,4 @@ rainy,mild,normal,weak,yes
 sunny,mild,normal,strong,yes
 overcast,mild,high,strong,yes
 overcast,hot,normal,weak,yes
-rainy,mild,high,strong,no
+rainy,mild,high,strong,no 
