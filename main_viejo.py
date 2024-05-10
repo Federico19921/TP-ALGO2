@@ -1,3 +1,5 @@
+# Por ahora lo mantenemos en el repo por las dudas pero sepamos que esto quedó en el pasado. 
+
 import Algoritmo
 import clasificacion
 import muestreo
