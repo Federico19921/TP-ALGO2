@@ -1,9 +1,11 @@
 """
-C4.5 es un algoritmo de aprendizaje automático que genera árboles de decisión. Este algoritmo es una extensión de 
-ID3 y fue desarrollado por Ross Quinlan. C4.5 es capaz de manejar datos faltantes y puede ser utilizado para 
-problemas de clasificación y regresión. Este bloque de código implementa el algoritmo C4.5 para la construcción de un RandomForest.
-
 Este módulo contiene funciones y clases relacionadas con la construcción y poda de árboles de decisión.
+Incluye funciones y clases que permiten generar arboles de decision a traves del uso del algoritmo C4.5, una extension del algoritmo ID3.
+
+Ademas de la construccion de arboles de decision, el modulo ofrece funcionalidades para manejar datos faltantes, trabajar con atributos continuos, 
+calcular ganancias de informacion y ratios de ganancia, entre otras operaciones relacionadas con el aprendizaje automatico. 
+El modulo tambien proporciona herramientas para la poda de arboles de decision segun criterios especificos, lo que permite optimizar la 
+estructura del arbol para mejorar la generalizacion del modelo.
 """
 
 from typing import Optional
