@@ -1,24 +1,29 @@
-import Algoritmo
+
 import clasificacion
 import muestreo
-import cargadoraCSV
+from cargadoraCSV import CargadorCsv
 import graficadora
+import Algoritmo
 
 def main():
-    datos_entrenamiento = cargadoraCSV.cargarCSV('weather.csv')  
+    archivo_csv = "weather.csv"
+    csv_loader = CargadorCsv(archivo_csv)
+    datos_entrenamiento = csv_loader.cargarCSV()
     
     # Realizar selección aleatoria de características
     atributos = ['Outlook', 'Temperature', 'Humidity', 'Wind']
     cantidad_seleccion = round(len(atributos) / 2)  # Aproximadamente la mitad de los atributos
     atributos_seleccionados = muestreo.seleccion_aleatoria_caracteristicas(atributos, cantidad_seleccion)
    
-    numero_arboles = 20 #PROBEMOS CON 4 ARBOLES
+
+    numero_arboles = 4 #PROBEMOS CON 4 ARBOLES
     instancia = ['Sunny', 'Cool', 'High', 'Strong'] # EJEMPLO DE INSTANCIA A CLASIFICAR
     
     print("Atributos seleccionados aleatoriamente:", atributos_seleccionados)
 
     # Crear una lista para almacenar las predicciones de cada árbol
     predicciones_arboles = []
+
 
     # Aplicar bootstrapping y construir árboles de decisión
     for _ in range(numero_arboles):
